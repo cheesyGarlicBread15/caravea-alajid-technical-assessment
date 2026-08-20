@@ -24,6 +24,6 @@ class ClientSeeder extends Seeder
         ]);
 
         // Plus a batch of random clients to fill out the list.
-        Client::factory()->count(8)->create();
+        Client::factory()->count(20)->create();
     }
 }
