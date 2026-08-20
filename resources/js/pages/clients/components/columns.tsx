@@ -3,10 +3,9 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { TrashIcon } from 'lucide-react';
 
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import type { DataTableFeatures } from '@/components/data-table/data-table-features';
 import { Button } from '@/components/ui/button';
 import clientRoutes from '@/routes/clients';
-
-import type { DataTableFeatures } from './data-table-features';
 
 // Shape of a client row, matching the data passed from the controller.
 export type Client = {
@@ -73,29 +72,3 @@ export const columns = columnHelper.columns([
         },
     }),
 ]);
-
-// ---------------------------------------------------------------------------
-// OLD SCAFFOLD CODE (kept for reference — do not remove)
-// ---------------------------------------------------------------------------
-// // This type is used to define the shape of our data.
-// // You can use a Zod schema here if you want.
-// export type Payment = {
-//     id: string
-//     amount: number
-//     status: "pending" | "processing" | "success" | "failed"
-//     email: string
-// }
-//
-// const columnHelper = createColumnHelper<DataTableFeatures, Payment>()
-//
-// export const columns = columnHelper.columns([
-//     columnHelper.accessor("status", {
-//         header: "Status",
-//     }),
-//     columnHelper.accessor("email", {
-//         header: "Email",
-//     }),
-//     columnHelper.accessor("amount", {
-//         header: "Amount",
-//     }),
-// ])

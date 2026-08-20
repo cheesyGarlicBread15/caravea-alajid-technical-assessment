@@ -3,6 +3,7 @@
 import { useTable } from '@tanstack/react-table';
 import type { ColumnDef, RowData } from '@tanstack/react-table';
 
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -14,7 +15,6 @@ import {
 
 import { features } from './data-table-features';
 import type { DataTableFeatures } from './data-table-features';
-import { Button } from '@/components/ui/button';
 
 interface DataTableProps<TData extends RowData> {
     columns: ColumnDef<DataTableFeatures, TData>[];
@@ -33,7 +33,6 @@ export function DataTable<TData extends RowData>({
 
     return (
         <div>
-
             <div className="overflow-hidden rounded-md border">
                 <Table>
                     <TableHeader>
@@ -43,7 +42,9 @@ export function DataTable<TData extends RowData>({
                                     return (
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder ? null : (
-                                                <table.FlexRender header={header} />
+                                                <table.FlexRender
+                                                    header={header}
+                                                />
                                             )}
                                         </TableHead>
                                     );
@@ -56,7 +57,9 @@ export function DataTable<TData extends RowData>({
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
-                                    data-state={row.getIsSelected() && 'selected'}
+                                    data-state={
+                                        row.getIsSelected() && 'selected'
+                                    }
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
