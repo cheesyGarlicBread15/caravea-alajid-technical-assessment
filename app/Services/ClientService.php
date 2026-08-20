@@ -9,8 +9,7 @@ class ClientService
 {
     public function clientOptions(): Collection
     {
-        return Client::query()
-            ->orderBy('name')
+        return Client::orderBy('name')
             ->get(['id', 'name'])
             ->map(fn(Client $client): array => [
                 'id' => $client->id,
