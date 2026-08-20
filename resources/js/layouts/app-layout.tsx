@@ -1,6 +1,7 @@
 import FlashToast from '@/components/flash-toast';
 import { cn } from '@/lib/utils';
 import clients from '@/routes/clients';
+import tasks from '@/routes/tasks';
 import { Link, usePage } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
 
@@ -13,6 +14,7 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     { label: 'Clients', href: clients.index.url(), match: '/clients' },
+    { label: 'Tasks', href: tasks.index.url(), match: '/tasks' },
 ];
 
 function isActive(currentUrl: string, item: NavItem): boolean {
