@@ -1,4 +1,4 @@
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { TrashIcon } from 'lucide-react';
 
@@ -28,12 +28,7 @@ export const columns = columnHelper.columns([
     columnHelper.accessor('title', {
         header: 'Title',
         cell: ({ row }) => (
-            <Link
-                href={taskRoutes.show.url(row.original.id)}
-                className="font-medium hover:underline hover:underline-offset-4"
-            >
-                {row.original.title}
-            </Link>
+            <span className="font-medium">{row.original.title}</span>
         ),
     }),
     columnHelper.accessor('status', {
@@ -56,7 +51,10 @@ export const columns = columnHelper.columns([
             const task = row.original;
 
             return (
-                <div className="text-right">
+                <div
+                    className="text-right"
+                    onClick={(event) => event.stopPropagation()}
+                >
                     <ConfirmDeleteDialog
                         title={`Delete "${task.title}"?`}
                         onConfirm={() =>

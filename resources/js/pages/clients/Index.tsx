@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { DataTable } from '@/components/data-table/data-table';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -11,7 +11,6 @@ interface ClientsIndexProps {
 }
 
 function Index({ clients }: ClientsIndexProps) {
-
     return (
         <>
             <Head title="Clients" />
@@ -32,7 +31,13 @@ function Index({ clients }: ClientsIndexProps) {
                             New client
                         </Button>
                     </div>
-                    <DataTable columns={columns} data={clients} />
+                    <DataTable
+                        columns={columns}
+                        data={clients}
+                        onRowClick={(client) =>
+                            router.visit(clientRoutes.show.url(client.id))
+                        }
+                    />
                 </div>
             </div>
         </>

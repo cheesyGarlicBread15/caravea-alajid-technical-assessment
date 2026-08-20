@@ -1,4 +1,4 @@
-import { Link, router } from '@inertiajs/react';
+import { router } from '@inertiajs/react';
 import { createColumnHelper } from '@tanstack/react-table';
 import { TrashIcon } from 'lucide-react';
 
@@ -23,12 +23,7 @@ export const columns = columnHelper.columns([
     columnHelper.accessor('name', {
         header: 'Name',
         cell: ({ row }) => (
-            <Link
-                href={clientRoutes.show.url(row.original.id)}
-                className="font-medium hover:underline hover:underline-offset-4"
-            >
-                {row.original.name}
-            </Link>
+            <span className="font-medium">{row.original.name}</span>
         ),
     }),
     columnHelper.accessor('description', {
@@ -50,7 +45,10 @@ export const columns = columnHelper.columns([
             const client = row.original;
 
             return (
-                <div className="text-right">
+                <div
+                    className="text-right"
+                    onClick={(event) => event.stopPropagation()}
+                >
                     <ConfirmDeleteDialog
                         title={`Delete "${client.name}"?`}
                         onConfirm={() =>

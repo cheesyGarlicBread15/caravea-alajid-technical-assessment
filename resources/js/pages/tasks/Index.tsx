@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { DataTable } from '@/components/data-table/data-table';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
@@ -31,7 +31,13 @@ function Index({ tasks }: TasksIndexProps) {
                             New task
                         </Button>
                     </div>
-                    <DataTable columns={columns} data={tasks} />
+                    <DataTable
+                        columns={columns}
+                        data={tasks}
+                        onRowClick={(task) =>
+                            router.visit(taskRoutes.show.url(task.id))
+                        }
+                    />
                 </div>
             </div>
         </>

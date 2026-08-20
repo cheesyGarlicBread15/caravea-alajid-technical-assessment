@@ -12,6 +12,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import { cn } from '@/lib/utils';
 
 import { features } from './data-table-features';
 import type { DataTableFeatures } from './data-table-features';
@@ -19,11 +20,14 @@ import type { DataTableFeatures } from './data-table-features';
 interface DataTableProps<TData extends RowData & { id: number | string }> {
     columns: ColumnDef<DataTableFeatures, TData>[];
     data: TData[];
+    /** Called when a row is clicked (e.g. to navigate to its detail page). */
+    onRowClick?: (row: TData) => void;
 }
 
 export function DataTable<TData extends RowData & { id: number | string }>({
     columns,
     data,
+    onRowClick,
 }: DataTableProps<TData>) {
     const table = useTable({
         features,
@@ -61,6 +65,14 @@ export function DataTable<TData extends RowData & { id: number | string }>({
                                     data-state={
                                         row.getIsSelected() && 'selected'
                                     }
+                                    onClick={
+                                        onRowClick
+                                            ? () => onRowClick(row.original)
+                                            : undefined
+                                    }
+                                    className={cn(
+                                        onRowClick && 'cursor-pointer',
+                                    )}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
