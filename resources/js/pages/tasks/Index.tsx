@@ -1,6 +1,7 @@
+import { Head, Link, router } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import taskRoutes from '@/routes/tasks';
-import { Head, Link, router } from '@inertiajs/react';
 
 type TaskStatus = 'pending' | 'in_progress' | 'completed';
 
@@ -66,12 +67,11 @@ function Index({ tasks }: TasksIndexProps) {
                             </p>
                         </div>
 
-                        <Link
-                            href={taskRoutes.create.url()}
-                            className="inline-block rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
+                        <Button
+                            render={<Link href={taskRoutes.create.url()} />}
                         >
                             New task
-                        </Link>
+                        </Button>
                     </div>
 
                     {tasks.length === 0 ? (
@@ -133,15 +133,15 @@ function Index({ tasks }: TasksIndexProps) {
                                                 {task.client?.name ?? '—'}
                                             </td>
                                             <td className="px-4 py-3 text-right">
-                                                <button
-                                                    type="button"
+                                                <Button
+                                                    variant="link"
                                                     onClick={() =>
                                                         deleteTask(task)
                                                     }
-                                                    className="font-medium text-[#f53003] hover:underline hover:underline-offset-4 dark:text-[#FF4433]"
+                                                    className="h-auto p-0 text-destructive hover:text-destructive"
                                                 >
                                                     Delete
-                                                </button>
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))}

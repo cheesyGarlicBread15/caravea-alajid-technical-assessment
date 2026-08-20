@@ -1,8 +1,9 @@
-import AppLayout from '@/layouts/app-layout';
-import taskRoutes from '@/routes/tasks';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
+import taskRoutes from '@/routes/tasks';
 
 type TaskStatus = 'pending' | 'in_progress' | 'completed';
 
@@ -238,22 +239,21 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <button
+                                <Button
                                     type="submit"
                                     disabled={form.processing}
-                                    className="inline-block rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
                                 >
                                     {form.processing
                                         ? 'Saving…'
                                         : 'Save changes'}
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     type="button"
+                                    variant="ghost"
                                     onClick={cancelEditing}
-                                    className="text-sm text-[#706f6c] hover:underline hover:underline-offset-4 dark:text-[#A1A09A]"
                                 >
                                     Cancel
-                                </button>
+                                </Button>
                             </div>
                         </form>
                     ) : (
@@ -276,20 +276,19 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                                 </div>
 
                                 <div className="flex shrink-0 items-center gap-2">
-                                    <button
+                                    <Button
                                         type="button"
                                         onClick={startEditing}
-                                        className="rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
                                     >
                                         Edit
-                                    </button>
-                                    <button
+                                    </Button>
+                                    <Button
                                         type="button"
+                                        variant="destructive"
                                         onClick={destroy}
-                                        className="rounded-sm border border-[#f53003] px-4 py-1.5 text-sm font-medium text-[#f53003] hover:bg-[#f53003] hover:text-white dark:border-[#FF4433] dark:text-[#FF4433] dark:hover:bg-[#FF4433] dark:hover:text-[#0a0a0a]"
                                     >
                                         Delete
-                                    </button>
+                                    </Button>
                                 </div>
                             </div>
 
