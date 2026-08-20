@@ -1,6 +1,8 @@
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 
 interface Task {
     id: number;
@@ -21,6 +23,36 @@ interface ClientShowProps {
 }
 
 function Show({ client }: ClientShowProps) {
+    const [isEditing, setIsEditing] = useState(false);
+
+    const form = useForm({
+        name: client.name,
+        description: client.description ?? '',
+    });
+
+    function startEditing() {
+        form.setData({
+            name: client.name,
+            description: client.description ?? '',
+        });
+        form.clearErrors();
+        setIsEditing(true);
+    }
+
+    function cancelEditing() {
+        form.reset();
+        form.clearErrors();
+        setIsEditing(false);
+    }
+
+    function submit(event: FormEvent) {
+        event.preventDefault();
+        form.put(clientRoutes.update.url(client.id), {
+            preserveScroll: true,
+            onSuccess: () => setIsEditing(false),
+        });
+    }
+
     function destroy() {
         if (
             !window.confirm(`Delete "${client.name}"? This cannot be undone.`)
@@ -46,24 +78,112 @@ function Show({ client }: ClientShowProps) {
                         </Link>
                     </div>
 
-                    <div className="mb-8 flex items-start justify-between gap-4">
-                        <div>
-                            <h1 className="text-xl font-semibold">
-                                {client.name}
-                            </h1>
-                            <p className="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">
-                                {client.description ?? 'No description.'}
-                            </p>
-                        </div>
-
-                        <button
-                            type="button"
-                            onClick={destroy}
-                            className="shrink-0 rounded-sm border border-[#f53003] px-4 py-1.5 text-sm font-medium text-[#f53003] hover:bg-[#f53003] hover:text-white dark:border-[#FF4433] dark:text-[#FF4433] dark:hover:bg-[#FF4433] dark:hover:text-[#0a0a0a]"
+                    {isEditing ? (
+                        <form
+                            onSubmit={submit}
+                            className="mb-8 flex flex-col gap-5"
                         >
-                            Delete
-                        </button>
-                    </div>
+                            <div className="flex flex-col gap-1.5">
+                                <label
+                                    htmlFor="name"
+                                    className="text-sm font-medium"
+                                >
+                                    Name
+                                </label>
+                                <input
+                                    id="name"
+                                    type="text"
+                                    value={form.data.name}
+                                    onChange={(event) =>
+                                        form.setData('name', event.target.value)
+                                    }
+                                    autoFocus
+                                    className="rounded-md border border-[#e3e3e0] bg-white px-3 py-2 text-sm outline-none focus:border-[#1b1b18] dark:border-[#3E3E3A] dark:bg-[#161615] dark:focus:border-[#eeeeec]"
+                                />
+                                {form.errors.name && (
+                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                        {form.errors.name}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col gap-1.5">
+                                <label
+                                    htmlFor="description"
+                                    className="text-sm font-medium"
+                                >
+                                    Description
+                                    <span className="ml-1 font-normal text-[#706f6c] dark:text-[#A1A09A]">
+                                        (optional)
+                                    </span>
+                                </label>
+                                <textarea
+                                    id="description"
+                                    rows={4}
+                                    value={form.data.description}
+                                    onChange={(event) =>
+                                        form.setData(
+                                            'description',
+                                            event.target.value,
+                                        )
+                                    }
+                                    className="resize-y rounded-md border border-[#e3e3e0] bg-white px-3 py-2 text-sm outline-none focus:border-[#1b1b18] dark:border-[#3E3E3A] dark:bg-[#161615] dark:focus:border-[#eeeeec]"
+                                />
+                                {form.errors.description && (
+                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                        {form.errors.description}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                <button
+                                    type="submit"
+                                    disabled={form.processing}
+                                    className="inline-block rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
+                                >
+                                    {form.processing
+                                        ? 'Saving…'
+                                        : 'Save changes'}
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={cancelEditing}
+                                    className="text-sm text-[#706f6c] hover:underline hover:underline-offset-4 dark:text-[#A1A09A]"
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    ) : (
+                        <div className="mb-8 flex items-start justify-between gap-4">
+                            <div>
+                                <h1 className="text-xl font-semibold">
+                                    {client.name}
+                                </h1>
+                                <p className="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">
+                                    {client.description ?? 'No description.'}
+                                </p>
+                            </div>
+
+                            <div className="flex shrink-0 items-center gap-2">
+                                <button
+                                    type="button"
+                                    onClick={startEditing}
+                                    className="rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={destroy}
+                                    className="rounded-sm border border-[#f53003] px-4 py-1.5 text-sm font-medium text-[#f53003] hover:bg-[#f53003] hover:text-white dark:border-[#FF4433] dark:text-[#FF4433] dark:hover:bg-[#FF4433] dark:hover:text-[#0a0a0a]"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    )}
 
                     <section>
                         <h2 className="mb-3 text-sm font-medium text-[#706f6c] dark:text-[#A1A09A]">
