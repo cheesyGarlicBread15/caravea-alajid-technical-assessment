@@ -1,26 +1,21 @@
-import { Head, Link, router } from '@inertiajs/react';
-import { TrashIcon } from 'lucide-react';
-import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { Head, Link } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
-
-interface Client {
-    id: number;
-    name: string;
-    description: string | null;
-    tasks_count?: number;
-    created_at: string;
-}
+import { columns } from './components/columns';
+import type { Client } from './components/columns';
+import { DataTable } from './components/data-table';
 
 interface ClientsIndexProps {
     clients: Client[];
 }
 
 function Index({ clients }: ClientsIndexProps) {
-    function deleteClient(client: Client) {
-        router.delete(clientRoutes.destroy.url(client.id));
-    }
+    // OLD: the delete action now lives in the data-table column definition
+    // (components/columns.tsx) — kept here for reference, do not remove.
+    // function deleteClient(client: Client) {
+    //     router.delete(clientRoutes.destroy.url(client.id));
+    // }
 
     return (
         <>
@@ -44,6 +39,9 @@ function Index({ clients }: ClientsIndexProps) {
                         </Button>
                     </div>
 
+                    <DataTable columns={columns} data={clients} />
+
+                    {/* OLD hand-rolled table + empty state (kept for reference — do not remove)
                     {clients.length === 0 ? (
                         <div className="rounded-lg border border-dashed border-[#e3e3e0] p-12 text-center dark:border-[#3E3E3A]">
                             <p className="text-sm text-[#706f6c] dark:text-[#A1A09A]">
@@ -62,19 +60,11 @@ function Index({ clients }: ClientsIndexProps) {
                             <table className="w-full text-left text-sm">
                                 <thead className="border-b border-[#e3e3e0] text-[#706f6c] dark:border-[#3E3E3A] dark:text-[#A1A09A]">
                                     <tr>
+                                        <th className="px-4 py-3 font-medium">Name</th>
+                                        <th className="px-4 py-3 font-medium">Description</th>
+                                        <th className="px-4 py-3 font-medium">Tasks</th>
                                         <th className="px-4 py-3 font-medium">
-                                            Name
-                                        </th>
-                                        <th className="px-4 py-3 font-medium">
-                                            Description
-                                        </th>
-                                        <th className="px-4 py-3 font-medium">
-                                            Tasks
-                                        </th>
-                                        <th className="px-4 py-3 font-medium">
-                                            <span className="sr-only">
-                                                Actions
-                                            </span>
+                                            <span className="sr-only">Actions</span>
                                         </th>
                                     </tr>
                                 </thead>
@@ -86,9 +76,7 @@ function Index({ clients }: ClientsIndexProps) {
                                         >
                                             <td className="px-4 py-3 font-medium">
                                                 <Link
-                                                    href={clientRoutes.show.url(
-                                                        client.id,
-                                                    )}
+                                                    href={clientRoutes.show.url(client.id)}
                                                     className="hover:underline hover:underline-offset-4"
                                                 >
                                                     {client.name}
@@ -103,15 +91,13 @@ function Index({ clients }: ClientsIndexProps) {
                                             <td className="px-4 py-3 text-right">
                                                 <ConfirmDeleteDialog
                                                     title={`Delete "${client.name}"?`}
-                                                    onConfirm={() =>
-                                                        deleteClient(client)
-                                                    }
+                                                    onConfirm={() => deleteClient(client)}
                                                     trigger={
                                                         <Button
                                                             size="icon-xs"
                                                             variant="ghost"
                                                             aria-label={`Delete ${client.name}`}
-                                                            className="text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive [&_svg]:transition-transform hover:[&_svg]:scale-110"
+                                                            className="text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive [and_svg]:transition-transform hover:[and_svg]:scale-110"
                                                         >
                                                             <TrashIcon />
                                                         </Button>
@@ -124,6 +110,7 @@ function Index({ clients }: ClientsIndexProps) {
                             </table>
                         </div>
                     )}
+                    */}
                 </div>
             </div>
         </>
