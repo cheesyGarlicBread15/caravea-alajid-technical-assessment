@@ -40,10 +40,11 @@ class ClientController extends Controller
     public function store(StoreClientRequest $request): RedirectResponse
     {
         $client = Client::create($request->validated());
+        $name = $client->name;
 
         return redirect()
             ->route('clients.show', $client)
-            ->with('success', 'Client created.');
+            ->with('success', "Client {$name} created.");
     }
 
     /**
@@ -64,10 +65,11 @@ class ClientController extends Controller
     public function update(UpdateClientRequest $request, Client $client): RedirectResponse
     {
         $client->update($request->validated());
+        $name = $client->name;
 
         return redirect()
             ->route('clients.show', $client)
-            ->with('success', 'Client updated.');
+            ->with('success', "Client {$name} updated.");
     }
 
     /**
@@ -76,7 +78,10 @@ class ClientController extends Controller
     public function destroy(Client $client): RedirectResponse
     {
         $client->delete();
+        $name = $client->name;
 
-        return redirect()->route('clients.index');
+        return redirect()
+            ->route('clients.index')
+            ->with('success', "Client {$name} deleted.");
     }
 }
