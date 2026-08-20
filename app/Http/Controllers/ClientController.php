@@ -77,8 +77,8 @@ class ClientController extends Controller
      */
     public function destroy(Client $client): RedirectResponse
     {
-        $client->delete();
         $name = $client->name;
+        $client->delete();
 
         return redirect()
             ->route('clients.index')
