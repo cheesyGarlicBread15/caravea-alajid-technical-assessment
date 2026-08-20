@@ -1,3 +1,4 @@
+import FlashToast from '@/components/flash-toast';
 import { cn } from '@/lib/utils';
 import clients from '@/routes/clients';
 import { Link, usePage } from '@inertiajs/react';
@@ -77,6 +78,8 @@ export default function AppLayout({ children }: PropsWithChildren) {
 
                 <main className="min-w-0 flex-1">{children}</main>
             </div>
+
+            <FlashToast />
         </div>
     );
 }

@@ -41,7 +41,9 @@ class ClientController extends Controller
     {
         $client = Client::create($request->validated());
 
-        return redirect()->route('clients.show', $client);
+        return redirect()
+            ->route('clients.show', $client)
+            ->with('success', 'Client created.');
     }
 
     /**
@@ -63,7 +65,9 @@ class ClientController extends Controller
     {
         $client->update($request->validated());
 
-        return redirect()->route('clients.show', $client);
+        return redirect()
+            ->route('clients.show', $client)
+            ->with('success', 'Client updated.');
     }
 
     /**
