@@ -16,12 +16,12 @@ import {
 import { features } from './data-table-features';
 import type { DataTableFeatures } from './data-table-features';
 
-interface DataTableProps<TData extends RowData> {
+interface DataTableProps<TData extends RowData & { id: number | string }> {
     columns: ColumnDef<DataTableFeatures, TData>[];
     data: TData[];
 }
 
-export function DataTable<TData extends RowData>({
+export function DataTable<TData extends RowData & { id: number | string }>({
     columns,
     data,
 }: DataTableProps<TData>) {
@@ -29,6 +29,7 @@ export function DataTable<TData extends RowData>({
         features,
         data,
         columns,
+        getRowId: (row) => String(row.id),
     });
 
     return (
