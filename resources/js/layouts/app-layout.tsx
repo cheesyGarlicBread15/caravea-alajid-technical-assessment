@@ -1,6 +1,7 @@
 import { Link, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import type { PropsWithChildren } from 'react';
-import FlashToast from '@/components/flash-toast';
+import { Toaster, toast } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 import clients from '@/routes/clients';
 import tasks from '@/routes/tasks';
@@ -27,8 +28,23 @@ function isActive(currentUrl: string, item: NavItem): boolean {
     );
 }
 
+interface FlashProps {
+    success: string | null;
+    error: string | null;
+}
+
 export default function AppLayout({ children }: PropsWithChildren) {
-    const { url } = usePage();
+    const { url, props } = usePage();
+    const flash = props.flash as FlashProps;
+
+    // Raise a shadcn toast whenever a shared flash message changes.
+    useEffect(() => {
+        if (flash.error) {
+            toast.add({ title: flash.error, type: 'error' });
+        } else if (flash.success) {
+            toast.add({ title: flash.success, type: 'success' });
+        }
+    }, [flash.success, flash.error]);
 
     return (
         <div className="flex min-h-screen bg-[#FDFDFC] text-[#1b1b18] dark:bg-[#0a0a0a] dark:text-[#EDEDEC]">
@@ -81,7 +97,7 @@ export default function AppLayout({ children }: PropsWithChildren) {
                 <main className="min-w-0 flex-1">{children}</main>
             </div>
 
-            <FlashToast />
+            <Toaster />
         </div>
     );
 }
