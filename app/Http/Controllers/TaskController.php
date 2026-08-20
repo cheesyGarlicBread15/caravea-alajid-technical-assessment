@@ -28,7 +28,7 @@ class TaskController extends Controller
             ->latest('id')
             ->get();
 
-        return Inertia::render('tasks/Index', [
+        return inertia('tasks/Index', [
             'tasks' => $tasks,
         ]);
     }
@@ -38,7 +38,7 @@ class TaskController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('tasks/Create', [
+        return inertia('tasks/Create', [
             'clients' => $this->clientService->clientOptions(),
             'statuses' => $this->taskService->statusOptions(),
         ]);
@@ -64,7 +64,7 @@ class TaskController extends Controller
     {
         $task->load('client');
 
-        return Inertia::render('tasks/Show', [
+        return inertia('tasks/Show', [
             'task' => $task,
             'clients' => $this->clientService->clientOptions(),
             'statuses' => $this->taskService->statusOptions(),

@@ -21,7 +21,7 @@ class ClientController extends Controller
             ->latest('id')
             ->get();
 
-        return Inertia::render('clients/Index', [
+        return inertia('clients/Index', [
             'clients' => $clients,
         ]);
     }
@@ -31,7 +31,7 @@ class ClientController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('clients/Create');
+        return inertia('clients/Create');
     }
 
     /**
@@ -54,7 +54,7 @@ class ClientController extends Controller
     {
         $client->load('tasks');
 
-        return Inertia::render('clients/Show', [
+        return inertia('clients/Show', [
             'client' => $client,
         ]);
     }
