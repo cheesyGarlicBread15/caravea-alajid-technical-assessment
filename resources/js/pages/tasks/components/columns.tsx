@@ -4,6 +4,7 @@ import { TrashIcon } from 'lucide-react';
 
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
 import type { DataTableFeatures } from '@/components/data-table/data-table-features';
+import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
 import taskRoutes from '@/routes/tasks';
 
@@ -19,30 +20,6 @@ export type Task = {
     client: { id: number; name: string } | null;
     created_at: string;
 };
-
-const STATUS_LABELS: Record<TaskStatus, string> = {
-    pending: 'Pending',
-    in_progress: 'In Progress',
-    completed: 'Completed',
-};
-
-const STATUS_STYLES: Record<TaskStatus, string> = {
-    pending: 'bg-[#f0f0ef] text-[#706f6c] dark:bg-white/10 dark:text-[#A1A09A]',
-    in_progress:
-        'bg-[#fff4e5] text-[#a35b00] dark:bg-[#3a2a12] dark:text-[#f0a94a]',
-    completed:
-        'bg-[#e7f5ec] text-[#1a7f42] dark:bg-[#123021] dark:text-[#4ad07f]',
-};
-
-function StatusBadge({ status }: { status: TaskStatus }) {
-    return (
-        <span
-            className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[status]}`}
-        >
-            {STATUS_LABELS[status]}
-        </span>
-    );
-}
 
 // Use `accessor` for data columns and `display` for columns without one.
 const columnHelper = createColumnHelper<DataTableFeatures, Task>();

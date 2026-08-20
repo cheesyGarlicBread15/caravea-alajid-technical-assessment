@@ -2,6 +2,7 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
@@ -200,9 +201,7 @@ function Show({ client }: ClientShowProps) {
                                         <span className="text-sm">
                                             {task.title}
                                         </span>
-                                        <span className="rounded-full bg-black/5 px-2 py-0.5 text-xs text-[#706f6c] dark:bg-white/10 dark:text-[#A1A09A]">
-                                            {task.status}
-                                        </span>
+                                        <StatusBadge status={task.status} />
                                     </li>
                                 ))}
                             </ul>
