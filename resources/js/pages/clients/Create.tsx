@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
+import { BackButton } from '@/components/back-button';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,12 +26,9 @@ function Create() {
             <div className="p-6 lg:p-8">
                 <div className="mx-auto w-full max-w-lg">
                     <div className="mb-6">
-                        <Link
-                            href={clientRoutes.index.url()}
-                            className="text-sm text-[#706f6c] hover:underline hover:underline-offset-4 dark:text-[#A1A09A]"
-                        >
-                            ← Back to clients
-                        </Link>
+                        <BackButton href={clientRoutes.index.url()}>
+                            Back to clients
+                        </BackButton>
                         <h1 className="mt-2 text-xl font-semibold">
                             New client
                         </h1>

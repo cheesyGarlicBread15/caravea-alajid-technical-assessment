@@ -1,6 +1,7 @@
-import { Head, Link, router, useForm } from '@inertiajs/react';
+import { Head, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { BackButton } from '@/components/back-button';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
@@ -106,12 +107,9 @@ function Show({ task, clients, statuses }: TaskShowProps) {
             <div className="p-6 lg:p-8">
                 <div className="mx-auto w-full max-w-2xl">
                     <div className="mb-6">
-                        <Link
-                            href={taskRoutes.index.url()}
-                            className="text-sm text-[#706f6c] hover:underline hover:underline-offset-4 dark:text-[#A1A09A]"
-                        >
-                            ← Back to tasks
-                        </Link>
+                        <BackButton href={taskRoutes.index.url()}>
+                            Back to tasks
+                        </BackButton>
                     </div>
 
                     {isEditing ? (
