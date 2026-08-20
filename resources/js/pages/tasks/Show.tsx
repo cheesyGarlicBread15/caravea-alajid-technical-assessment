@@ -2,7 +2,26 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList,
+} from '@/components/ui/combobox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import taskRoutes from '@/routes/tasks';
 
@@ -34,17 +53,6 @@ interface TaskShowProps {
     statuses: StatusOption[];
 }
 
-const inputClass =
-    'rounded-md border border-[#e3e3e0] bg-white px-3 py-2 text-sm outline-none focus:border-[#1b1b18] dark:border-[#3E3E3A] dark:bg-[#161615] dark:focus:border-[#eeeeec]';
-
-const STATUS_STYLES: Record<TaskStatus, string> = {
-    pending: 'bg-[#f0f0ef] text-[#706f6c] dark:bg-white/10 dark:text-[#A1A09A]',
-    in_progress:
-        'bg-[#fff4e5] text-[#a35b00] dark:bg-[#3a2a12] dark:text-[#f0a94a]',
-    completed:
-        'bg-[#e7f5ec] text-[#1a7f42] dark:bg-[#123021] dark:text-[#4ad07f]',
-};
-
 function Show({ task, clients, statuses }: TaskShowProps) {
     const [isEditing, setIsEditing] = useState(false);
 
@@ -58,6 +66,9 @@ function Show({ task, clients, statuses }: TaskShowProps) {
     const statusLabel =
         statuses.find((status) => status.value === task.status)?.label ??
         task.status;
+
+    const selectedClient =
+        clients.find((client) => client.id === form.data.client_id) ?? null;
 
     function startEditing() {
         form.setData({
@@ -106,13 +117,8 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                     {isEditing ? (
                         <form onSubmit={submit} className="flex flex-col gap-5">
                             <div className="flex flex-col gap-1.5">
-                                <label
-                                    htmlFor="title"
-                                    className="text-sm font-medium"
-                                >
-                                    Title
-                                </label>
-                                <input
+                                <Label htmlFor="title">Title</Label>
+                                <Input
                                     id="title"
                                     type="text"
                                     value={form.data.title}
@@ -123,26 +129,23 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                                         )
                                     }
                                     autoFocus
-                                    className={inputClass}
+                                    aria-invalid={!!form.errors.title}
                                 />
                                 {form.errors.title && (
-                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                    <p className="text-sm text-destructive">
                                         {form.errors.title}
                                     </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-1.5">
-                                <label
-                                    htmlFor="description"
-                                    className="text-sm font-medium"
-                                >
+                                <Label htmlFor="description">
                                     Description
-                                    <span className="ml-1 font-normal text-[#706f6c] dark:text-[#A1A09A]">
+                                    <span className="ml-1 font-normal text-muted-foreground">
                                         (optional)
                                     </span>
-                                </label>
-                                <textarea
+                                </Label>
+                                <Textarea
                                     id="description"
                                     rows={4}
                                     value={form.data.description}
@@ -152,84 +155,106 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                                             event.target.value,
                                         )
                                     }
-                                    className={`resize-y ${inputClass}`}
+                                    className="resize-y"
+                                    aria-invalid={!!form.errors.description}
                                 />
                                 {form.errors.description && (
-                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                    <p className="text-sm text-destructive">
                                         {form.errors.description}
                                     </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-1.5">
-                                <label
-                                    htmlFor="status"
-                                    className="text-sm font-medium"
-                                >
-                                    Status
-                                </label>
-                                <select
-                                    id="status"
+                                <Label htmlFor="status">Status</Label>
+                                <Select
                                     value={form.data.status}
-                                    onChange={(event) =>
-                                        form.setData(
-                                            'status',
-                                            event.target.value,
-                                        )
+                                    onValueChange={(value) =>
+                                        form.setData('status', value ?? '')
                                     }
-                                    className={inputClass}
                                 >
-                                    {statuses.map((status) => (
-                                        <option
-                                            key={status.value}
-                                            value={status.value}
-                                        >
-                                            {status.label}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <SelectTrigger
+                                        id="status"
+                                        className="w-full"
+                                        aria-invalid={!!form.errors.status}
+                                    >
+                                        <SelectValue placeholder="Select status">
+                                            {(value: string | null) =>
+                                                statuses.find(
+                                                    (status) =>
+                                                        status.value === value,
+                                                )?.label ?? 'Select status'
+                                            }
+                                        </SelectValue>
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {statuses.map((status) => (
+                                            <SelectItem
+                                                key={status.value}
+                                                value={status.value}
+                                            >
+                                                {status.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 {form.errors.status && (
-                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                    <p className="text-sm text-destructive">
                                         {form.errors.status}
                                     </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-1.5">
-                                <label
-                                    htmlFor="client_id"
-                                    className="text-sm font-medium"
-                                >
+                                <Label htmlFor="client_id">
                                     Client
-                                    <span className="ml-1 font-normal text-[#706f6c] dark:text-[#A1A09A]">
+                                    <span className="ml-1 font-normal text-muted-foreground">
                                         (optional)
                                     </span>
-                                </label>
-                                <select
-                                    id="client_id"
-                                    value={form.data.client_id}
-                                    onChange={(event) =>
+                                </Label>
+                                <Combobox
+                                    items={clients}
+                                    value={selectedClient}
+                                    onValueChange={(
+                                        client: ClientOption | null,
+                                    ) =>
                                         form.setData(
                                             'client_id',
-                                            event.target.value === ''
-                                                ? ''
-                                                : Number(event.target.value),
+                                            client ? client.id : '',
                                         )
                                     }
-                                    className={inputClass}
+                                    itemToStringLabel={(client: ClientOption) =>
+                                        client.name
+                                    }
+                                    isItemEqualToValue={(
+                                        a: ClientOption,
+                                        b: ClientOption,
+                                    ) => a.id === b.id}
                                 >
-                                    <option value="">— No client —</option>
-                                    {clients.map((client) => (
-                                        <option
-                                            key={client.id}
-                                            value={client.id}
-                                        >
-                                            {client.name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <ComboboxInput
+                                        id="client_id"
+                                        placeholder="Search clients…"
+                                        showClear
+                                        aria-invalid={!!form.errors.client_id}
+                                    />
+                                    <ComboboxContent>
+                                        <ComboboxEmpty>
+                                            No clients found.
+                                        </ComboboxEmpty>
+                                        <ComboboxList>
+                                            {(client: ClientOption) => (
+                                                <ComboboxItem
+                                                    key={client.id}
+                                                    value={client}
+                                                >
+                                                    {client.name}
+                                                </ComboboxItem>
+                                            )}
+                                        </ComboboxList>
+                                    </ComboboxContent>
+                                </Combobox>
                                 {form.errors.client_id && (
-                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                    <p className="text-sm text-destructive">
                                         {form.errors.client_id}
                                     </p>
                                 )}
@@ -261,11 +286,7 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                                         <h1 className="text-xl font-semibold">
                                             {task.title}
                                         </h1>
-                                        <span
-                                            className={`inline-block rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[task.status]}`}
-                                        >
-                                            {statusLabel}
-                                        </span>
+                                        <StatusBadge status={task.status} />
                                     </div>
                                     <p className="mt-1 text-sm text-[#706f6c] dark:text-[#A1A09A]">
                                         {task.description ?? 'No description.'}

@@ -4,6 +4,9 @@ import type { FormEvent } from 'react';
 import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
 import { StatusBadge } from '@/components/status-badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
 
@@ -81,13 +84,8 @@ function Show({ client }: ClientShowProps) {
                             className="mb-8 flex flex-col gap-5"
                         >
                             <div className="flex flex-col gap-1.5">
-                                <label
-                                    htmlFor="name"
-                                    className="text-sm font-medium"
-                                >
-                                    Name
-                                </label>
-                                <input
+                                <Label htmlFor="name">Name</Label>
+                                <Input
                                     id="name"
                                     type="text"
                                     value={form.data.name}
@@ -95,26 +93,23 @@ function Show({ client }: ClientShowProps) {
                                         form.setData('name', event.target.value)
                                     }
                                     autoFocus
-                                    className="rounded-md border border-[#e3e3e0] bg-white px-3 py-2 text-sm outline-none focus:border-[#1b1b18] dark:border-[#3E3E3A] dark:bg-[#161615] dark:focus:border-[#eeeeec]"
+                                    aria-invalid={!!form.errors.name}
                                 />
                                 {form.errors.name && (
-                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                    <p className="text-sm text-destructive">
                                         {form.errors.name}
                                     </p>
                                 )}
                             </div>
 
                             <div className="flex flex-col gap-1.5">
-                                <label
-                                    htmlFor="description"
-                                    className="text-sm font-medium"
-                                >
+                                <Label htmlFor="description">
                                     Description
-                                    <span className="ml-1 font-normal text-[#706f6c] dark:text-[#A1A09A]">
+                                    <span className="ml-1 font-normal text-muted-foreground">
                                         (optional)
                                     </span>
-                                </label>
-                                <textarea
+                                </Label>
+                                <Textarea
                                     id="description"
                                     rows={4}
                                     value={form.data.description}
@@ -124,10 +119,11 @@ function Show({ client }: ClientShowProps) {
                                             event.target.value,
                                         )
                                     }
-                                    className="resize-y rounded-md border border-[#e3e3e0] bg-white px-3 py-2 text-sm outline-none focus:border-[#1b1b18] dark:border-[#3E3E3A] dark:bg-[#161615] dark:focus:border-[#eeeeec]"
+                                    className="resize-y"
+                                    aria-invalid={!!form.errors.description}
                                 />
                                 {form.errors.description && (
-                                    <p className="text-sm text-[#f53003] dark:text-[#FF4433]">
+                                    <p className="text-sm text-destructive">
                                         {form.errors.description}
                                     </p>
                                 )}
