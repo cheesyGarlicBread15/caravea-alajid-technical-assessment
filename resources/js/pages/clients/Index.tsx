@@ -1,6 +1,6 @@
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 
 interface Client {
     id: number;
@@ -15,6 +15,16 @@ interface ClientsIndexProps {
 }
 
 function Index({ clients }: ClientsIndexProps) {
+    function deleteClient(client: Client) {
+        if (
+            !window.confirm(`Delete "${client.name}"? This cannot be undone.`)
+        ) {
+            return;
+        }
+
+        router.delete(clientRoutes.destroy.url(client.id));
+    }
+
     return (
         <>
             <Head title="Clients" />
@@ -95,14 +105,15 @@ function Index({ clients }: ClientsIndexProps) {
                                                 {client.tasks_count ?? 0}
                                             </td>
                                             <td className="px-4 py-3 text-right">
-                                                <Link
-                                                    href={clientRoutes.edit.url(
-                                                        client.id,
-                                                    )}
+                                                <button
+                                                    type="button"
+                                                    onClick={() =>
+                                                        deleteClient(client)
+                                                    }
                                                     className="font-medium text-[#f53003] hover:underline hover:underline-offset-4 dark:text-[#FF4433]"
                                                 >
-                                                    Edit
-                                                </Link>
+                                                    Delete
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
