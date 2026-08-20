@@ -1,8 +1,8 @@
-import AppLayout from '@/layouts/app-layout';
-import taskRoutes from '@/routes/tasks';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import AppLayout from '@/layouts/app-layout';
+import taskRoutes from '@/routes/tasks';
 
 type TaskStatus = 'pending' | 'in_progress' | 'completed';
 

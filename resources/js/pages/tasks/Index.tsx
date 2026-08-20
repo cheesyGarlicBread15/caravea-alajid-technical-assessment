@@ -1,6 +1,6 @@
+import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import taskRoutes from '@/routes/tasks';
-import { Head, Link, router } from '@inertiajs/react';
 
 type TaskStatus = 'pending' | 'in_progress' | 'completed';
 

@@ -1,8 +1,8 @@
-import AppLayout from '@/layouts/app-layout';
-import clientRoutes from '@/routes/clients';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import AppLayout from '@/layouts/app-layout';
+import clientRoutes from '@/routes/clients';
 
 interface Task {
     id: number;

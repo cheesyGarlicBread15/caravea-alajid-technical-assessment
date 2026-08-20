@@ -1,9 +1,9 @@
+import { Link, usePage } from '@inertiajs/react';
+import type { PropsWithChildren } from 'react';
 import FlashToast from '@/components/flash-toast';
 import { cn } from '@/lib/utils';
 import clients from '@/routes/clients';
 import tasks from '@/routes/tasks';
-import { Link, usePage } from '@inertiajs/react';
-import type { PropsWithChildren } from 'react';
 
 interface NavItem {
     label: string;

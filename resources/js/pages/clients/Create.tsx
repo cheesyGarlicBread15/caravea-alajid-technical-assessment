@@ -1,7 +1,7 @@
-import AppLayout from '@/layouts/app-layout';
-import clientRoutes from '@/routes/clients';
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
+import AppLayout from '@/layouts/app-layout';
+import clientRoutes from '@/routes/clients';
 
 function Create() {
     const form = useForm({

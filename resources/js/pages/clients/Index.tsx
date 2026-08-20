@@ -1,6 +1,6 @@
+import { Head, Link, router } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
-import { Head, Link, router } from '@inertiajs/react';
 
 interface Client {
     id: number;

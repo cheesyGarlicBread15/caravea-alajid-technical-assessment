@@ -1,7 +1,7 @@
-import AppLayout from '@/layouts/app-layout';
-import taskRoutes from '@/routes/tasks';
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
+import AppLayout from '@/layouts/app-layout';
+import taskRoutes from '@/routes/tasks';
 
 interface ClientOption {
     id: number;
