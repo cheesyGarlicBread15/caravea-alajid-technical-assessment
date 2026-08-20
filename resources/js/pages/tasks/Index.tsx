@@ -1,4 +1,6 @@
 import { Head, Link, router } from '@inertiajs/react';
+import { TrashIcon } from 'lucide-react';
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import taskRoutes from '@/routes/tasks';
@@ -45,10 +47,6 @@ function StatusBadge({ status }: { status: TaskStatus }) {
 
 function Index({ tasks }: TasksIndexProps) {
     function deleteTask(task: Task) {
-        if (!window.confirm(`Delete "${task.title}"? This cannot be undone.`)) {
-            return;
-        }
-
         router.delete(taskRoutes.destroy.url(task.id));
     }
 
@@ -133,15 +131,22 @@ function Index({ tasks }: TasksIndexProps) {
                                                 {task.client?.name ?? '—'}
                                             </td>
                                             <td className="px-4 py-3 text-right">
-                                                <Button
-                                                    variant="link"
-                                                    onClick={() =>
+                                                <ConfirmDeleteDialog
+                                                    title={`Delete "${task.title}"?`}
+                                                    onConfirm={() =>
                                                         deleteTask(task)
                                                     }
-                                                    className="h-auto p-0 text-destructive hover:text-destructive"
-                                                >
-                                                    Delete
-                                                </Button>
+                                                    trigger={
+                                                        <Button
+                                                            size="icon-xs"
+                                                            variant="ghost"
+                                                            aria-label={`Delete ${task.title}`}
+                                                            className="text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive [&_svg]:transition-transform hover:[&_svg]:scale-110"
+                                                        >
+                                                            <TrashIcon />
+                                                        </Button>
+                                                    }
+                                                />
                                             </td>
                                         </tr>
                                     ))}

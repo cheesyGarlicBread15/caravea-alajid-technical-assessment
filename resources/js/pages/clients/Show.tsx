@@ -1,6 +1,7 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
@@ -55,12 +56,6 @@ function Show({ client }: ClientShowProps) {
     }
 
     function destroy() {
-        if (
-            !window.confirm(`Delete "${client.name}"? This cannot be undone.`)
-        ) {
-            return;
-        }
-
         router.delete(clientRoutes.destroy.url(client.id));
     }
 
@@ -170,13 +165,18 @@ function Show({ client }: ClientShowProps) {
                                 <Button type="button" onClick={startEditing}>
                                     Edit
                                 </Button>
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    onClick={destroy}
-                                >
-                                    Delete
-                                </Button>
+                                <ConfirmDeleteDialog
+                                    title={`Delete "${client.name}"?`}
+                                    onConfirm={destroy}
+                                    trigger={
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                        >
+                                            Delete
+                                        </Button>
+                                    }
+                                />
                             </div>
                         </div>
                     )}

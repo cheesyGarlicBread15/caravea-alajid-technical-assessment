@@ -1,6 +1,7 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
 import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import taskRoutes from '@/routes/tasks';
@@ -84,10 +85,6 @@ function Show({ task, clients, statuses }: TaskShowProps) {
     }
 
     function destroy() {
-        if (!window.confirm(`Delete "${task.title}"? This cannot be undone.`)) {
-            return;
-        }
-
         router.delete(taskRoutes.destroy.url(task.id));
     }
 
@@ -282,13 +279,18 @@ function Show({ task, clients, statuses }: TaskShowProps) {
                                     >
                                         Edit
                                     </Button>
-                                    <Button
-                                        type="button"
-                                        variant="destructive"
-                                        onClick={destroy}
-                                    >
-                                        Delete
-                                    </Button>
+                                    <ConfirmDeleteDialog
+                                        title={`Delete "${task.title}"?`}
+                                        onConfirm={destroy}
+                                        trigger={
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                            >
+                                                Delete
+                                            </Button>
+                                        }
+                                    />
                                 </div>
                             </div>
 
