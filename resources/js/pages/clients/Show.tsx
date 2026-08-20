@@ -1,6 +1,8 @@
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { ConfirmDeleteDialog } from '@/components/confirm-delete-dialog';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
 
@@ -54,12 +56,6 @@ function Show({ client }: ClientShowProps) {
     }
 
     function destroy() {
-        if (
-            !window.confirm(`Delete "${client.name}"? This cannot be undone.`)
-        ) {
-            return;
-        }
-
         router.delete(clientRoutes.destroy.url(client.id));
     }
 
@@ -137,22 +133,21 @@ function Show({ client }: ClientShowProps) {
                             </div>
 
                             <div className="flex items-center gap-3">
-                                <button
+                                <Button
                                     type="submit"
                                     disabled={form.processing}
-                                    className="inline-block rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
                                 >
                                     {form.processing
                                         ? 'Saving…'
                                         : 'Save changes'}
-                                </button>
-                                <button
+                                </Button>
+                                <Button
                                     type="button"
+                                    variant="ghost"
                                     onClick={cancelEditing}
-                                    className="text-sm text-[#706f6c] hover:underline hover:underline-offset-4 dark:text-[#A1A09A]"
                                 >
                                     Cancel
-                                </button>
+                                </Button>
                             </div>
                         </form>
                     ) : (
@@ -167,20 +162,21 @@ function Show({ client }: ClientShowProps) {
                             </div>
 
                             <div className="flex shrink-0 items-center gap-2">
-                                <button
-                                    type="button"
-                                    onClick={startEditing}
-                                    className="rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
-                                >
+                                <Button type="button" onClick={startEditing}>
                                     Edit
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={destroy}
-                                    className="rounded-sm border border-[#f53003] px-4 py-1.5 text-sm font-medium text-[#f53003] hover:bg-[#f53003] hover:text-white dark:border-[#FF4433] dark:text-[#FF4433] dark:hover:bg-[#FF4433] dark:hover:text-[#0a0a0a]"
-                                >
-                                    Delete
-                                </button>
+                                </Button>
+                                <ConfirmDeleteDialog
+                                    title={`Delete "${client.name}"?`}
+                                    onConfirm={destroy}
+                                    trigger={
+                                        <Button
+                                            type="button"
+                                            variant="destructive"
+                                        >
+                                            Delete
+                                        </Button>
+                                    }
+                                />
                             </div>
                         </div>
                     )}

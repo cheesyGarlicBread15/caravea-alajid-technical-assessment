@@ -1,5 +1,6 @@
 import { Head, Link, useForm } from '@inertiajs/react';
 import type { FormEvent } from 'react';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/app-layout';
 import clientRoutes from '@/routes/clients';
 
@@ -87,21 +88,19 @@ function Create() {
                         </div>
 
                         <div className="flex items-center gap-3">
-                            <button
-                                type="submit"
-                                disabled={form.processing}
-                                className="inline-block rounded-sm border border-black bg-[#1b1b18] px-4 py-1.5 text-sm font-medium text-white hover:bg-black disabled:opacity-50 dark:border-[#eeeeec] dark:bg-[#eeeeec] dark:text-[#1C1C1A] dark:hover:bg-white"
-                            >
+                            <Button type="submit" disabled={form.processing}>
                                 {form.processing
                                     ? 'Creating…'
                                     : 'Create client'}
-                            </button>
-                            <Link
-                                href={clientRoutes.index.url()}
-                                className="text-sm text-[#706f6c] hover:underline hover:underline-offset-4 dark:text-[#A1A09A]"
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                render={
+                                    <Link href={clientRoutes.index.url()} />
+                                }
                             >
                                 Cancel
-                            </Link>
+                            </Button>
                         </div>
                     </form>
                 </div>
