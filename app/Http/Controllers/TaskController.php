@@ -25,6 +25,7 @@ class TaskController extends Controller
     {
         $tasks = Task::with('client')
             ->latest()
+            ->latest('id')
             ->get();
 
         return Inertia::render('tasks/Index', [

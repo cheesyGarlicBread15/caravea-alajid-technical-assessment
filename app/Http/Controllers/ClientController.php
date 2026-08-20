@@ -18,6 +18,7 @@ class ClientController extends Controller
     {
         $clients = Client::withCount('tasks')
             ->latest()
+            ->latest('id')
             ->get();
 
         return Inertia::render('clients/Index', [
