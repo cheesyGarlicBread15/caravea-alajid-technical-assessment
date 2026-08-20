@@ -91,6 +91,7 @@ function Create() {
                             </Button>
                             <Button
                                 variant="ghost"
+                                nativeButton={false}
                                 render={
                                     <Link href={clientRoutes.index.url()} />
                                 }

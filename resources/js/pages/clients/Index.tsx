@@ -26,6 +26,7 @@ function Index({ clients }: ClientsIndexProps) {
                         </div>
 
                         <Button
+                            nativeButton={false}
                             render={<Link href={clientRoutes.create.url()} />}
                         >
                             New client

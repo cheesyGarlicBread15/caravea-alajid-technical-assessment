@@ -215,6 +215,7 @@ function Create({ clients, statuses }: TasksCreateProps) {
                             </Button>
                             <Button
                                 variant="ghost"
+                                nativeButton={false}
                                 render={<Link href={taskRoutes.index.url()} />}
                             >
                                 Cancel

@@ -26,6 +26,7 @@ function Index({ tasks }: TasksIndexProps) {
                         </div>
 
                         <Button
+                            nativeButton={false}
                             render={<Link href={taskRoutes.create.url()} />}
                         >
                             New task
