@@ -16,8 +16,7 @@ class ClientController extends Controller
      */
     public function index(): Response
     {
-        $clients = Client::query()
-            ->withCount('tasks')
+        $clients = Client::withCount('tasks')
             ->latest()
             ->get();
 

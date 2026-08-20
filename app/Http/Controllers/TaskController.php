@@ -23,8 +23,7 @@ class TaskController extends Controller
      */
     public function index(): Response
     {
-        $tasks = Task::query()
-            ->with('client')
+        $tasks = Task::with('client')
             ->latest()
             ->get();
 
