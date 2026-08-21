@@ -1,6 +1,9 @@
 # Caravea Technical Assessment — Clients & Task Management System
 
-A small full-stack CRUD app for managing **Clients** and **Tasks**, where a task can either belong to a client or not.
+## What's inside
+
+- **Clients** — full CRUD. Index shows a data table with a task count per client; the detail page lists that client's tasks and supports inline editing.
+- **Tasks** — full CRUD. Each task has a title, optional description, a **status** (`pending` / `in_progress` / `completed`), and an optional **client** to track who this task is for. The detail page supports inline editing.
 
 ---
 
@@ -66,22 +69,15 @@ Then open the localhost URL (default: `http://127.0.0.1:8000` or `http://localho
 
 ---
 
-## What's inside
-
-- **Clients** — full CRUD. Index shows a data table with a task count per client; the detail page lists that client's tasks and supports inline editing.
-- **Tasks** — full CRUD. Each task has a title, optional description, a **status** (`pending` / `in_progress` / `completed`, backed by a PHP enum), and an optional **client**. The detail page supports inline editing.
-- **UX niceties** — shadcn data tables with clickable rows, confirm-before-delete dialogs, flash-message toasts, a searchable client combobox, and a status `Select`.
-
----
 
 ## Why it's built this way
 
-- **Inertia monolith, not a REST API + separate SPA.** Server-side routing and controllers stay in Laravel; React renders the pages and receives data as props via `Inertia::render(...)`. One codebase, one deploy, no API versioning or client-side data-fetching layer to maintain — matching Caravea's architecture.
-- **Thin controllers, a small service layer.** Controllers handle transport (validation, binding, rendering, redirects). Reusable read logic (client/status option lists) lives in `App\Services`, so it isn't duplicated across `create` and `show`.
-- **Form Requests for validation.** `StoreTaskRequest` / `UpdateTaskRequest` (and the client equivalents) validate at the boundary before the controller runs, keeping rules out of the controller body.
-- **An enum for task status.** `TaskStatusEnum` is the single source of truth for statuses and their labels — used by the backend option list and mirrored in the typed frontend.
-- **Deliberate query loading.** Lists eager-load only what a column needs — `with('client')` for the tasks table, `withCount('tasks')` for the clients table (a count subquery, not the rows). Detail pages use `load(...)` because route-model binding has already fetched the model. A secondary `latest('id')` ordering keeps lists stable when seeded rows share a timestamp.
-- **Shared, reusable frontend components.** Cross-cutting UI (`data-table`, `status-badge`, `confirm-delete-dialog`, `back-button`, the flash toast) lives in `resources/js/components` so pages stay declarative and each module only defines its own table `columns`.
+- **Inertia monolith.** Server-side routing and controllers stay in Laravel. React renders the pages and receives data as props. Monolith let's me get straight to coding the features instead of spending time scaffolding and generating boilerplate code to connect backend and frontend (also matches with your company's architecture which is also monolith).
+- **Thin controllers, a small service layer.** Controllers handle transport (validation, binding, rendering, redirects). Business logic (reusable or not) lives in `App\Services`, this keeps controllers clean and maintainable.
+- **Form Requests for validation.** `StoreTaskRequest` / `UpdateTaskRequest` (and the client equivalents) validate at the boundary before the controller runs. Purpose is to abstract validation logic (especially if it's verbose/long), further making controllers slim.
+- **An enum for task status.** `TaskStatusEnum` is the single source of truth for statuses and their labels. This avoids unecessary hardcoded values making the backend overall more maintainable.
+- **Deliberate query loading.** Lists eager-load only what a column needs — `with('client')` for the tasks table, `withCount('tasks')` for the clients table (a count subquery, not the rows). Detail pages use `load(...)` to load the necessary data for showing a resource.
+- **Shared, reusable frontend components.** Cross-cutting UI (`data-table`, `status-badge`, `confirm-delete-dialog`, `back-button`) lives in `resources/js/components` so pages stay declarative and each module only defines its own table `columns`.
 
 ---
 
@@ -102,32 +98,10 @@ resources/js/
   layouts/app-layout.tsx          sidebar shell + flash -> toast bridge
 ```
 
----
-
-## Testing & quality
-
-```bash
-composer test        # config clear + eslint + tsc + pest
-composer ci:check    # the above plus prettier + lint checks (what CI runs)
-```
-
-Individual tools:
-
-```bash
-php artisan test          # Pest
-vendor/bin/pint           # format PHP
-npm run lint              # ESLint (autofix)
-npm run types:check       # tsc --noEmit
-```
-
----
-
 ## AI usage
 
-> The assessment asks for this explicitly. The notes below are accurate to how this project was built — **review and rewrite them in your own words before submitting.**
-
-- **Tools:** Claude Code (Claude Opus).
-- **How I used it:** scaffolding the Inertia pages and controllers, refactoring toward the service / Form-Request structure, wiring up the shadcn components (data table, dialogs, toast, select/combobox), and debugging TypeScript/lint issues. I drove the design decisions and reviewed every change.
-- **Roughly how much was AI vs me:** _(fill in your honest estimate, e.g. "~X% AI-generated, refined and directed by me")._
-- **One thing the AI got wrong that I had to fix:** _(pick the real one you want to talk about — e.g. it first reached for Sonner + `next-themes` for the toast when the project already had a base-ui `toast.tsx`; or the base-ui `Button` needed `nativeButton={false}` when rendered as a link; or list ordering jumped after an edit because all seeded rows shared a `created_at`, which I fixed with a `latest('id')` tiebreaker)._
-- **How I check AI output before shipping:** run `composer ci:check` (ESLint, Prettier, `tsc`, Pest), read the diff, and click through the affected pages locally.
+- **Tools:** Claude Code (Opus 4.8 medium effort).
+- **How I used it:** Basically on all scenarios, scaffolded some basic pages like `app-layout.tsx` and `Index.tsx` to start displaying the UI and data. I mainly used AI to write whole features but I always validate it if it's up to my liking in terms of architecture and implementation. As always, I use AI to debug both frontend (web console errors, broken UI flow etc...) and backend (syntax error, namespace errors because of refactoring, etc...). AI wrote all of the tests for me combined with factories so I can focus on running those tests every other commits to keep up with QA.
+- **Roughly how much was AI vs me:** AI generated 60% of the code while the remaining is mine. Most of the code is on the frontend to which AI really helped me in inertia pages (Index, Show, and Create) and shared components (data-table, back-button, status-badge). The components under ui are from mine, I added it via shadcn console commands. I generated most of the backend files (controller, model, migration, seeder, request, etc...) by artisan commands. I then provided some basic code like Client::all() and return redirect with flash success to set the base so AI can reference to my structure/architecture.
+- **One thing the AI got wrong that I had to fix:** Even though I already added MCP for Shadcn, it still got the toast component wrong by adding sonner (it was sonner before but the most recent docs as I'm writing this reverted back to Toast component). Same thing with data-table, I had to follow the most recent implementation of tanstack which is v9 and (though AI really helped me big time in making this a shared component). Even though I wrote TaskStatusEnum, AI still hardcoded the status in form requests, tests, services, and options so I fixed it myself by using the Enum I made.
+- **How I check AI output before shipping:** I run `composer ci:check` (ESLint, Prettier, `tsc`, Pest) to make the overall formatting of files consistent. I open the diff to see what changes were made, why and how is it different from the previous one, and click through the affected pages locally to test the features implemented.
