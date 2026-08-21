@@ -11,7 +11,7 @@ class ClientService
     {
         return Client::orderBy('name')
             ->get(['id', 'name'])
-            ->map(fn(Client $client): array => [
+            ->map(fn (Client $client): array => [
                 'id' => $client->id,
                 'name' => $client->name,
             ]);
